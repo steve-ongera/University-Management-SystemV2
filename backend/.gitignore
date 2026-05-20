@@ -1,0 +1,43 @@
+# Ignore specific Django files
+core/models.py
+core/views.py
+
+# Ignore python cache
+__pycache__/
+*.py[cod]
+
+# Ignore migrations cache
+*/migrations/__pycache__/
+
+# Logs
+logs/
+*.log
+
+# Media uploads
+media/
+
+# Environment
+.env
+venv/
+
+# Database
+db.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django media uploads
+media/
+
+# Logs
+logs/
+
+# Database
+db.sqlite3
+
+# Environment
+.env
+venv/
