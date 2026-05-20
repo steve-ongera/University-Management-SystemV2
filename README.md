@@ -114,17 +114,6 @@ university-erp/
         │
         ├── api/
         │   ├── axios.js               Base Axios instance with token injection
-        │   ├── auth.js
-        │   ├── students.js
-        │   ├── lecturers.js
-        │   ├── courses.js
-        │   ├── grades.js
-        │   ├── attendance.js
-        │   ├── fees.js
-        │   ├── hostels.js
-        │   ├── library.js
-        │   ├── research.js
-        │   └── notifications.js
         │
         ├── context/
         │   └── AuthContext.jsx         Global auth state, user role, token
