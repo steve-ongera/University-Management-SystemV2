@@ -1,0 +1,1230 @@
+/* =============================================================================
+   UNIVERSITY ERP — global.css
+   Single stylesheet for the entire React frontend.
+   Import once in main.jsx:  import './styles/global.css';
+
+   Sections:
+     1.  CSS Variables & Theme
+     2.  Reset & Base
+     3.  Typography
+     4.  Layout shell (navbar + sidebar + main)
+     5.  Navbar
+     6.  Sidebar
+     7.  Flash Messages
+     8.  Page wrapper & page header
+     9.  Cards
+    10.  Tables
+    11.  Forms & Inputs
+    12.  Buttons
+    13.  Badges & Status chips
+    14.  Stats / KPI tiles
+    15.  Modals
+    16.  Pagination
+    17.  Utilities
+    18.  Loader
+    19.  Responsive — tablet (≤992px)
+    20.  Responsive — mobile (≤576px)
+============================================================================= */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. CSS Variables & Theme
+   Override these in a role-specific file if you need per-role colours.
+───────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Brand */
+  --primary:          #1a73e8;
+  --primary-dark:     #1558b0;
+  --primary-light:    #e8f0fe;
+  --primary-rgb:      26, 115, 232;
+
+  --secondary:        #1d2aed;
+  --accent:           #fbbc04;
+  --danger:           #d93025;
+  --success:          #1e8e3e;
+  --warning:          #f29900;
+  --info:             #17a2b8;
+
+  /* Neutrals */
+  --white:            #ffffff;
+  --gray-50:          #f8f9fa;
+  --gray-100:         #f1f3f4;
+  --gray-200:         #e8eaed;
+  --gray-300:         #dadce0;
+  --gray-400:         #bdc1c6;
+  --gray-500:         #80868b;
+  --gray-600:         #5f6368;
+  --gray-700:         #3c4043;
+  --gray-800:         #202124;
+  --text:             #3c4043;
+  --text-muted:       #5f6368;
+  --border:           #e0e0e0;
+
+  /* Layout */
+  --navbar-height:    58px;
+  --sidebar-width:    230px;
+  --sidebar-collapsed: 0px;
+
+  /* Elevation */
+  --shadow-sm:        0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow:           0 2px 8px rgba(0,0,0,.10);
+  --shadow-md:        0 4px 16px rgba(0,0,0,.12);
+  --shadow-lg:        0 8px 30px rgba(0,0,0,.14);
+
+  /* Radius */
+  --radius-sm:        4px;
+  --radius:           8px;
+  --radius-lg:        12px;
+  --radius-xl:        16px;
+
+  /* Transitions */
+  --transition:       0.2s ease;
+  --transition-slow:  0.35s ease;
+
+  /* Font */
+  --font:             'Roboto', 'Varela Round', sans-serif;
+  --font-size-base:   13px;
+  --font-size-sm:     12px;
+  --font-size-lg:     15px;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. Reset & Base
+───────────────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--font-size-base);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font);
+  font-size: var(--font-size-base);
+  color: var(--text);
+  background: var(--gray-100);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+a:hover { color: var(--primary-dark); text-decoration: none; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+ul, ol { list-style: none; margin: 0; padding: 0; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   3. Typography
+───────────────────────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--gray-800);
+  line-height: 1.3;
+}
+h1 { font-size: 1.75rem; }
+h2 { font-size: 1.4rem;  }
+h3 { font-size: 1.2rem;  }
+h4 { font-size: 1.05rem; }
+h5 { font-size: .95rem;  }
+h6 { font-size: .875rem; }
+
+p { margin-bottom: .75rem; color: var(--text); }
+p:last-child { margin-bottom: 0; }
+
+small, .text-sm { font-size: var(--font-size-sm); }
+.text-muted     { color: var(--text-muted) !important; }
+
+/* Brand colour helpers — mirror Django's primary-text class */
+.primary-text   { color: var(--primary) !important; }
+.primary-bg     { background-color: var(--primary) !important; color: #fff !important; }
+.primary-light-bg { background-color: var(--primary-light) !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   4. Layout shell
+   The three-zone layout: navbar (top) + sidebar (left) + main (right)
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Navbar sits at the very top, full width, fixed height */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--navbar-height);
+  z-index: 1030;
+  background: var(--white) !important;
+  border-bottom: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-sm) !important;
+  padding: 0 1rem;
+}
+
+/* Sidebar fixed below navbar */
+.sidenav {
+  position: fixed;
+  top: var(--navbar-height);
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--white);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1020;
+  transition: width var(--transition-slow), transform var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content pushed right of sidebar and below navbar */
+main[role="main"] {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--navbar-height);
+  min-height: calc(100vh - var(--navbar-height));
+  padding: 1.25rem;
+  background: var(--gray-100);
+  transition: margin-left var(--transition-slow);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   5. Navbar
+───────────────────────────────────────────────────────────────────────────── */
+.navbar .container-fluid {
+  height: 100%;
+  align-items: center;
+}
+
+/* Logo */
+.navbar .navbar-brand {
+  height: 36px;
+  width: auto;
+  margin-right: 0;
+  object-fit: contain;
+}
+
+/* Hamburger toggle */
+.menu-top {
+  font-size: 1.35rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+  line-height: 1;
+}
+.menu-top:hover { background: var(--gray-100); }
+
+/* Centre brand text */
+.institutionbrand h4 {
+  font-size: .95rem;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40vw;
+}
+
+/* Notification icon */
+.notifyIcon {
+  position: relative;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center;
+}
+.notifyIcon .ri-notification-3-line {
+  font-size: 1.25rem;
+}
+.notifyIcon .top { line-height: 1; }
+.notifyIcon > div {          /* badge bubble */
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: var(--danger);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  pointer-events: none;
+}
+.notifyIcon > div:empty,
+.notifyIcon > div span:empty { display: none; }
+
+/* Notification dropdown */
+.dropdown-menu.notify {
+  width: 300px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: .5rem 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+}
+.dropdown-menu.notify li {
+  padding: .5rem 1rem;
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+.dropdown-menu.notify h6 {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: .25rem;
+}
+
+/* Profile section */
+.navbar .profile {
+  display: flex !important;
+  align-items: center;
+  padding: 0 12px !important;
+  gap: 0;
+}
+.navbar .profile img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary-light);
+}
+.salutation {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--gray-700);
+  max-width: 120px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Generic navbar dropdown */
+.navbar .dropdown-menu {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: .35rem 0;
+  min-width: 160px;
+}
+.navbar .dropdown-item {
+  font-size: var(--font-size-sm);
+  padding: .45rem 1rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background var(--transition);
+}
+.navbar .dropdown-item:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.navbar .dropdown-item i {
+  font-size: 1rem;
+  width: 18px;
+  text-align: center;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   6. Sidebar
+───────────────────────────────────────────────────────────────────────────── */
+.sidenav::-webkit-scrollbar { width: 4px; }
+.sidenav::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+}
+
+.sidenav .menu {
+  flex: 1;
+  padding: .5rem 0;
+}
+
+/* Every menu item row */
+.menu-link {
+  display: block;
+}
+
+/* The clickable row inside a menu-link */
+.menu_sub {
+  display: flex;
+  align-items: center;
+  padding: 9px 14px;
+  color: var(--gray-700);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  margin: 1px 6px;
+  text-decoration: none !important;
+}
+.menu_sub:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.menu_sub i {
+  font-size: 1rem;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+/* Active state — direct link */
+.menu-link.active > .menu_sub {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 600;
+}
+.menu-link.active > .menu_sub i { color: var(--primary); }
+
+/* Left accent bar on active */
+.menu-link.active > a.menu_sub,
+.menu-link.active > .menu_sub {
+  position: relative;
+}
+.menu-link.active > a.menu_sub::before,
+.menu-link.active > .menu_sub::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  background: var(--primary);
+  border-radius: 0 3px 3px 0;
+}
+
+/* Caret icon */
+.dropdown-caret {
+  transition: transform var(--transition);
+  font-size: 1rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Sub-items */
+.sub-item a {
+  display: block;
+  padding: 7px 12px 7px 24px;
+  font-size: var(--font-size-sm);
+  color: var(--gray-600);
+  border-radius: var(--radius-sm);
+  margin: 1px 6px;
+  transition: background var(--transition), color var(--transition);
+  text-decoration: none !important;
+  position: relative;
+}
+.sub-item a::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--gray-400);
+  border-radius: 50%;
+  transition: background var(--transition);
+}
+.sub-item a:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.sub-item a:hover::before { background: var(--primary); }
+
+/* Active sub-item (set via fontWeight 600 in Sidebar.jsx — reinforce here) */
+.sub-item a[style*="600"] {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+.sub-item a[style*="600"]::before { background: var(--primary); }
+
+/* Brand footer */
+.brand-footer {
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--gray-400);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   7. Flash Messages
+───────────────────────────────────────────────────────────────────────────── */
+.flash-messages-container {
+  position: fixed;
+  top: calc(var(--navbar-height) + 12px);
+  right: 20px;
+  z-index: 1055;
+  min-width: 280px;
+  max-width: 420px;
+  pointer-events: none;
+}
+.flash-messages-container .alert {
+  pointer-events: all;
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  font-size: var(--font-size-sm);
+  animation: flashIn .25s ease;
+}
+@keyframes flashIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   8. Page wrapper & page header
+   Use .page-wrapper inside every page component as the root container.
+───────────────────────────────────────────────────────────────────────────── */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Top bar of a page: title left, action buttons right */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.page-header__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin: 0;
+}
+.page-header__sub {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.page-header__actions {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  background: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+.breadcrumb-item + .breadcrumb-item::before {
+  color: var(--gray-400);
+}
+.breadcrumb-item a { color: var(--primary); }
+.breadcrumb-item.active { color: var(--text-muted); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   9. Cards
+───────────────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-header {
+  padding: .85rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+.card-header h5,
+.card-header h6 {
+  margin: 0;
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+.card-body {
+  padding: 1.1rem;
+}
+.card-footer {
+  padding: .75rem 1.1rem;
+  border-top: 1px solid var(--border);
+  background: var(--gray-50);
+}
+
+/* Card variants */
+.card-primary  { border-left: 4px solid var(--primary); }
+.card-success  { border-left: 4px solid var(--success); }
+.card-warning  { border-left: 4px solid var(--warning); }
+.card-danger   { border-left: 4px solid var(--danger);  }
+.card-info     { border-left: 4px solid var(--info);    }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   10. Tables
+    Always wrap a <table> in .table-responsive for horizontal scroll on mobile.
+───────────────────────────────────────────────────────────────────────────── */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+.table th {
+  background: var(--gray-50);
+  color: var(--gray-600);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: .4px;
+  padding: .65rem .9rem;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+.table td {
+  padding: .6rem .9rem;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+}
+.table tbody tr:hover { background: var(--gray-50); }
+.table tbody tr:last-child td { border-bottom: none; }
+
+/* Striped helper */
+.table-striped tbody tr:nth-child(even) { background: var(--gray-50); }
+
+/* DataTables overrides — keeps Bootstrap 5 DataTables looking right */
+.dataTables_wrapper .dataTables_filter input {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .3rem .65rem;
+  font-size: var(--font-size-sm);
+  outline: none;
+}
+.dataTables_wrapper .dataTables_filter input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb),.15);
+}
+.dataTables_wrapper .dataTables_length select {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .25rem .5rem;
+  font-size: var(--font-size-sm);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   11. Forms & Inputs
+───────────────────────────────────────────────────────────────────────────── */
+.form-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-bottom: .3rem;
+}
+
+.form-control,
+.form-select {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .4rem .75rem;
+  font-size: var(--font-size-sm);
+  color: var(--text);
+  background: var(--white);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+  height: 36px;
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), .15);
+  outline: none;
+}
+.form-control::placeholder { color: var(--gray-400); }
+textarea.form-control { height: auto; min-height: 90px; }
+
+.form-control.is-invalid { border-color: var(--danger); }
+.invalid-feedback {
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 3px;
+}
+
+/* Input group */
+.input-group .form-control { border-radius: var(--radius-sm) 0 0 var(--radius-sm); }
+.input-group .btn { border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+/* Search bar shorthand */
+.search-bar {
+  position: relative;
+  max-width: 260px;
+}
+.search-bar input {
+  padding-left: 2.1rem;
+}
+.search-bar i {
+  position: absolute;
+  left: .65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gray-400);
+  font-size: .95rem;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   12. Buttons
+───────────────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: .38rem .9rem;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none !important;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.btn i { font-size: .95rem; }
+.btn:disabled { opacity: .6; pointer-events: none; }
+
+/* Sizes */
+.btn-sm { padding: .25rem .6rem; font-size: 11px; }
+.btn-lg { padding: .55rem 1.2rem; font-size: var(--font-size-lg); }
+
+/* Variants */
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.btn-primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  color: #fff;
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: var(--primary);
+  border-color: var(--primary);
+}
+.btn-outline-primary:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Mirror the Django primary-outline-btn class */
+.primary-outline-btn {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-sm);
+}
+.primary-outline-btn:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-danger  { background: var(--danger);  color:#fff; border-color: var(--danger);  }
+.btn-danger:hover  { background:#b5261c; border-color:#b5261c; color:#fff; }
+.btn-success { background: var(--success); color:#fff; border-color: var(--success); }
+.btn-success:hover { background:#176e34; border-color:#176e34; color:#fff; }
+.btn-warning { background: var(--warning); color:#fff; border-color: var(--warning); }
+.btn-warning:hover { background:#d98800; border-color:#d98800; color:#fff; }
+.btn-info    { background: var(--info);    color:#fff; border-color: var(--info);    }
+.btn-info:hover    { background:#138999; border-color:#138999; color:#fff; }
+
+.btn-secondary {
+  background: var(--gray-200);
+  color: var(--gray-700);
+  border-color: var(--gray-300);
+}
+.btn-secondary:hover {
+  background: var(--gray-300);
+  color: var(--gray-800);
+}
+
+.btn-light {
+  background: var(--white);
+  color: var(--gray-700);
+  border-color: var(--border);
+}
+.btn-light:hover { background: var(--gray-100); }
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--primary);
+  padding: 0;
+}
+.btn-link:hover { color: var(--primary-dark); text-decoration: underline; }
+
+/* Icon-only button */
+.btn-icon {
+  padding: .3rem .45rem;
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  border-radius: var(--radius-sm);
+}
+.btn-icon:hover {
+  background: var(--gray-100);
+  color: var(--gray-800);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   13. Badges & Status chips
+───────────────────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: .2rem .55rem;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  line-height: 1.4;
+}
+
+.badge-primary { background: var(--primary-light); color: var(--primary); }
+.badge-success { background: #e6f4ea; color: var(--success); }
+.badge-danger  { background: #fce8e6; color: var(--danger);  }
+.badge-warning { background: #fef7e0; color: #a56000;        }
+.badge-info    { background: #e3f6fc; color: #0d7a8a;        }
+.badge-gray    { background: var(--gray-100); color: var(--gray-600); }
+
+/* Bootstrap 5 badge overrides */
+.bg-success { background-color: var(--success) !important; }
+.bg-danger  { background-color: var(--danger)  !important; }
+.bg-warning { background-color: var(--warning) !important; color:#fff !important; }
+.bg-info    { background-color: var(--info)    !important; }
+.bg-primary { background-color: var(--primary) !important; }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   14. Stats / KPI tiles
+   Use a .stats-grid > .stat-card layout on dashboards.
+───────────────────────────────────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition);
+}
+.stat-card:hover { box-shadow: var(--shadow); }
+
+.stat-card__icon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+/* Colour modifiers for the icon box */
+.stat-card__icon--primary { background: var(--primary-light); color: var(--primary); }
+.stat-card__icon--success { background: #e6f4ea; color: var(--success); }
+.stat-card__icon--warning { background: #fef7e0; color: var(--warning); }
+.stat-card__icon--danger  { background: #fce8e6; color: var(--danger);  }
+.stat-card__icon--info    { background: #e3f6fc; color: var(--info);    }
+
+.stat-card__body { flex: 1; min-width: 0; }
+.stat-card__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  line-height: 1.1;
+}
+.stat-card__label {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.stat-card__delta {
+  font-size: 11px;
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.stat-card__delta--up   { color: var(--success); }
+.stat-card__delta--down { color: var(--danger);  }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   15. Modals
+───────────────────────────────────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeOverlay .2s ease;
+}
+@keyframes fadeOverlay {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideModal .22s ease;
+}
+@keyframes slideModal {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-box--sm { max-width: 380px; }
+.modal-box--lg { max-width: 800px; }
+.modal-box--xl { max-width: 1000px; }
+
+.modal-box__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.modal-box__header h5 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.modal-box__body    { padding: 1.25rem; }
+.modal-box__footer  {
+  padding: .85rem 1.25rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+  background: var(--gray-50);
+}
+
+/* Close button */
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--gray-500);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+}
+.modal-close:hover { background: var(--gray-100); color: var(--gray-800); }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   16. Pagination
+───────────────────────────────────────────────────────────────────────────── */
+.pagination {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.page-item .page-link {
+  padding: .3rem .65rem;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm) !important;
+  color: var(--primary);
+  background: var(--white);
+  transition: all var(--transition);
+}
+.page-item .page-link:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+.page-item.active .page-link {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.page-item.disabled .page-link {
+  color: var(--gray-400);
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   17. Utilities
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 1rem 0;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+.empty-state i {
+  font-size: 3rem;
+  color: var(--gray-300);
+  display: block;
+  margin-bottom: .75rem;
+}
+.empty-state p { font-size: var(--font-size-sm); }
+
+/* Loading spinner */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--gray-200);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+.spinner--lg { width: 40px; height: 40px; border-width: 3px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Centered loading block */
+.loading-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  padding: 3rem;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* Gap helpers */
+.gap-1 { gap: .25rem; }
+.gap-2 { gap: .5rem;  }
+.gap-3 { gap: .75rem; }
+.gap-4 { gap: 1rem;   }
+
+/* Flex helpers */
+.flex         { display: flex; }
+.flex-col     { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-end  { justify-content: flex-end; }
+.flex-wrap    { flex-wrap: wrap; }
+.flex-1       { flex: 1; }
+
+/* Avatar circle */
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.avatar--lg { width: 52px; height: 52px; }
+.avatar--sm { width: 24px; height: 24px; }
+
+.avatar-initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Info row inside a detail card */
+.info-row {
+  display: flex;
+  gap: .5rem;
+  padding: .5rem 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: var(--font-size-sm);
+}
+.info-row:last-child { border-bottom: none; }
+.info-row__label {
+  width: 160px;
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.info-row__value { color: var(--text); flex: 1; }
+
+/* Section label (small grey heading above a group) */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: var(--gray-500);
+  margin-bottom: .5rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   18. Loader (kept for legacy loader.js compatibility)
+───────────────────────────────────────────────────────────────────────────── */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,.85);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.svg-loader {
+  width: 60px;
+  height: 60px;
+  animation: spin .8s linear infinite;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   19. Responsive — tablet (≤992px)
+───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 992px) {
+
+  /* Sidebar slides off-screen; parent toggles it via the open prop */
+  .sidenav {
+    transform: translateX(-100%);
+    width: var(--sidebar-width);
+    z-index: 1025;
+    box-shadow: var(--shadow-md);
+  }
+  .sidenav.open {
+    transform: translateX(0);
+  }
+
+  /* When sidebar is closed, main fills full width */
+  main[role="main"] {
+    margin-left: 0;
+  }
+
+  /* Overlay behind open sidebar on mobile */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.35);
+    z-index: 1024;
+  }
+
+  /* Shrink brand text on tablet */
+  .institutionbrand h4 {
+    font-size: .8rem;
+    max-width: 30vw;
+  }
+
+  /* Stats grid 2 columns */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   20. Responsive — mobile (≤576px)
+───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 576px) {
+
+  :root {
+    --navbar-height: 52px;
+  }
+
+  /* Hide centre brand on very small screens */
+  .institutionbrand { display: none; }
+
+  /* Full-width sidebar on mobile */
+  .sidenav {
+    width: 100vw;
+    max-width: 280px;
+  }
+
+  /* Stack page header vertically */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .page-header__actions { width: 100%; }
+
+  /* Stats single column */
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Info rows stack */
+  .info-row {
+    flex-direction: column;
+    gap: .2rem;
+  }
+  .info-row__label { width: auto; }
+
+  /* Card body tighter on mobile */
+  .card-body { padding: .75rem; }
+
+  /* Search bar full width */
+  .search-bar { max-width: 100%; }
+
+  /* Modal full-screen on mobile */
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal-box {
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 92vh;
+    max-width: 100%;
+  }
+
+  /* Table font size */
+  .table th, .table td { font-size: 11px; padding: .5rem .6rem; }
+
+  /* Button text may wrap on very small screens */
+  .btn { white-space: normal; }
+
+  main[role="main"] { padding: .75rem; }
+}
