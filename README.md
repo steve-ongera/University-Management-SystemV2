@@ -283,10 +283,7 @@ university-erp/
         │
         └── styles/
             ├── global.css
-            ├── Navbar.css
-            ├── Sidebar.css
-            ├── FlashMessages.css
-            └── Layout.css
+            
 ```
 
 ---
